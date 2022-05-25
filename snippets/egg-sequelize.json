@@ -1,0 +1,205 @@
+{
+  "egg - controller 骨架": {
+    "prefix": "wy-egg-controller-skeleton",
+    "body": [
+      "'use strict'",
+      "",
+      "const Controller = require('egg').Controller",
+      "",
+      "class TemplateController extends Controller {",
+      "",
+      "}",
+      "",
+      "module.exports = TemplateController",
+      ""
+    ],
+    "description": "不带方法"
+  },
+  "egg - controller 基础结构": {
+    "prefix": "wy-egg-controller-base",
+    "body": [
+      "'use strict'",
+      "",
+      "const Controller = require('egg').Controller",
+      "",
+      "class TemplateController extends Controller {",
+      "\t// 注释内容",
+      "\tasync login() {",
+      "\t\tconst { ctx } = this",
+      "\t\tconst { service, helper } = ctx",
+      "\t\tconst { userId } = ctx.request.body",
+      "",
+      "\t\t// 参数校验",
+      "\t\tconst rules = {",
+      "\t\t\tuserId: { required: true, message: '要查询的用户不能为空' }",
+      "\t\t}",
+      "\t\tconst passed = await ctx.validate(rules, ctx.request.body)",
+      "\t\tif (!passed) return",
+      "",
+      "\t\tconst data = await service.user.info(userId)",
+      "\t\tif (data) {",
+      "\t\t\thelper.success(data)",
+      "\t\t} else {",
+      "\t\t\thelper.error()",
+      "\t\t}",
+      "\t}",
+      "}",
+      "",
+      "module.exports = TemplateController",
+      ""
+    ],
+    "description": "包含骨架和方法"
+  },
+  "egg - controller 方法骨架": {
+    "prefix": "wy-egg-controller-method",
+    "body": [
+      "// 注释内容",
+      "async login() {",
+      "\tconst { ctx } = this",
+      "\tconst { service, helper } = ctx",
+      "\tconst { userId } = ctx.request.body",
+      "}"
+    ],
+    "description": "包含常用方法和参数结构"
+  },
+  "egg - controller 参数校验": {
+    "prefix": "wy-egg-controller-validate",
+    "body": [
+      "// 参数校验",
+      "const rules = {",
+      "\tuserId: { required: true, message: '要查询的用户不能为空' }",
+      "}",
+      "const passed = await ctx.validate(rules, ctx.request.body)",
+      "if (!passed) return"
+    ],
+    "description": "包含一个 rule 和 校验结构"
+  },
+  "egg - controller 响应": {
+    "prefix": "wy-egg-controller-response",
+    "body": [
+      "if (data) {",
+      "\thelper.success(data)",
+      "} else {",
+      "\thelper.error()",
+      "}"
+    ],
+    "description": "包含 success 和 error"
+  },
+  "egg - service 骨架": {
+    "prefix": "wy-egg-service-skeleton",
+    "body": [
+      "'use strict'",
+      "",
+      "const Service = require('egg').Service",
+      "",
+      "class TemplateService extends Service {",
+      "",
+      "}",
+      "",
+      "module.exports = TemplateService",
+      ""
+    ],
+    "description": "不带方法"
+  },
+  "egg - service 方法骨架": {
+    "prefix": "wy-egg-service-method",
+    "body": [
+      "// 注释内容",
+      "async login(values) {",
+      "\tconst { model } = this.ctx",
+      "\tconst { Op } = this.app.Sequelize",
+      "}"
+    ],
+    "description": "包含常用方法和参数结构"
+  },
+  "egg - service 分页骨架": {
+    "prefix": "wy-egg-service-method-page",
+    "body": [
+      "// 注释内容",
+      "async logs(values) {",
+      "\tconst { model } = this.ctx",
+      "\tconst { Op } = this.app.Sequelize",
+      "\tconst where = {}",
+      "\tconst order = []",
+      "\tconst offset = (values.currentPage - 1) * values.pageSize",
+      "\tconst limit = parseInt(values.pageSize)",
+      "",
+      "\t// 根据用户查询",
+      "\tif (values.userId) {",
+      "\t\twhere.userId = values.userId",
+      "\t}",
+      "\t// 根据创建时间查询",
+      "\tif (values.createdAt) {",
+      "\t\twhere.createdAt = {",
+      "\t\t\t// 根据时间段查询",
+      "\t\t\t[Op.between]: values.createdAt",
+      "\t\t}",
+      "\t}",
+      "\t// 排序",
+      "\tif (values.sortField && values.sortOrder) {",
+      "\t\torder.push([ values.sortField, values.sortOrder === 'descend' ? 'DESC' : 'ASC' ])",
+      "\t}",
+      "",
+      "\treturn await model.Log.findAndCountAll({",
+      "\t\tlimit,",
+      "\t\toffset,",
+      "\t\twhere,",
+      "\t\torder,",
+      "\t\tdistinct: true",
+      "\t})",
+      "\t\t.then(res => {",
+      "\t\t\tif (res && res.rows) res.rows = res.rows.map(item => item.toJSON())",
+      "\t\t\tres.currentPage = values.currentPage",
+      "\t\t\tres.pageSize = values.pageSize",
+      "\t\t\tres.totalSize = res.count",
+      "\t\t\tdelete res.count",
+      "\t\t\treturn res",
+      "\t\t})",
+      "}"
+    ],
+    "description": "包含常用方法和参数结构、分页查询参数处理等"
+  },
+  "egg - sequelize 数据转对象": {
+    "prefix": "wy-egg-then-object",
+    "body": [
+      ".then(res => {",
+      "\tif (res) return res.toJSON()",
+      "\treturn res",
+      "})"
+    ],
+    "description": "sequelize service 数据处理成 object"
+  },
+  "egg - sequelize 数据转数组": {
+    "prefix": "wy-egg-then-array",
+    "body": [
+      ".then(res => {",
+      "\tif (res) return res.map(item => item.toJSON())",
+      "\treturn res",
+      "})"
+    ],
+    "description": "sequelize service 数据处理成 array"
+  },
+  "egg - sequelize 分页数据字段转换": {
+    "prefix": "wy-egg-then-page",
+    "body": [
+      ".then(res => {",
+      "\tif (res && res.rows) res.rows = res.rows.map(item => item.toJSON())",
+      "\tres.currentPage = values.currentPage",
+      "\tres.pageSize = values.pageSize",
+      "\tres.totalSize = res.count",
+      "\tdelete res.count",
+      "\treturn res",
+      "})"
+    ],
+    "description": "sequelize service 分页数据处理和字段转换"
+  },
+  "egg - sequelize 事务": {
+    "prefix": "wy-egg-transaction-base",
+    "body": [
+      "return await model.transaction(async transaction => {",
+      "",
+      "})"
+    ],
+    "description": "sequelize service 事务基础结构"
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "name": "wy-vscode-snippets",
+  "displayName": "wy-vscode-snippets",
+  "description": "脚手架快捷语法模板库",
+  "version": "1.0.0",
+  "publisher": "wytxer",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wytxer/wy-vscode-snippets.git"
+  },
+  "icon": "logo.png",
+  "engines": {
+    "vscode": "^1.62.0",
+    "node": ">=10"
+  },
+  "categories": [
+    "Snippets"
+  ],
+  "scripts": {
+    "build": "vsce package",
+    "publish": "vsce publish",
+    "build:lib": "node lib/build.js"
+	},
+  "contributes": {
+    "snippets": [
+      {
+        "language": "javascript",
+        "path": "./snippets/egg-sequelize.json"
+      }
+    ]
+  }
+}
